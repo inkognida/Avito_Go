@@ -16,7 +16,12 @@ type Account struct {
 }
 
 type AccountRequest struct {
-	AccountOrder Account
+	gorm.Model
+	UserId  uuid.UUID `json:"user_id"`
+	ItemID  uuid.UUID `json:"item_id"`
+	OrderID uuid.UUID `json:"order_id"`
+	Price   int       `json:"price"`
+	Info    string    `json:"info"`
 }
 
 type AccountRespond struct {

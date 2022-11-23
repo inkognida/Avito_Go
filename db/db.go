@@ -2,7 +2,6 @@ package db
 
 import (
 	"Avito_go/pkg/model"
-	"github.com/google/uuid"
 	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,25 +10,24 @@ import (
 
 func createUser(db *gorm.DB) {
 	//ADD USER BALANCE
-	data := model.Balance{
-		Model:       gorm.Model{},
-		UserId:      uuid.New(),
-		UserBalance: 100,
-		Info:        "User balance created",
-	}
-	db.Create(&data)
-
-	//ADD USER ACCOUNT
-	data_ := model.Account{
-		Model:       gorm.Model{},
-		UserId:      data.UserId,
-		ItemID:      uuid.New(),
-		OrderID:     uuid.New(),
-		Price:       10,
-		UserBalance: data.UserBalance,
-		Info:        "Order exists",
-	}
-	db.Create(&data_)
+	//data := model.Balance{
+	//	Model:       gorm.Model{},
+	//	UserId:      uuid.New(),
+	//	UserBalance: 100,
+	//	Info:        "User balance created",
+	//}
+	//db.Create(&data)
+	//
+	////ADD USER ACCOUNT
+	//data_ := model.Account{
+	//	Model:   gorm.Model{},
+	//	UserId:  data.UserId,
+	//	ItemID:  uuid.New(),
+	//	OrderID: uuid.New(),
+	//	Price:   100,
+	//	Info:    "",
+	//}
+	//db.Create(&data_)
 
 	// UPDATE USER
 	//db.Model(&Balance{}).Where("user_id = ?", "aboba").Update("user_balance", 200)

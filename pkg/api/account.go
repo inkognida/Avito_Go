@@ -11,39 +11,39 @@ import (
 func makeOrder(db *gorm.DB, acc model.AccountRequest, w http.ResponseWriter) interface{} {
 	var user model.Balance
 
-	userExists := db.Where("user_id = ?", acc.AccountOrder.UserId).Find(&user)
-	if userExists.RowsAffected == 0 {
+	userExists := db.Where("user_id = ?", acc.UserId).Find(&user)
+	if userExists.RowsAffected == 0 { //no double user check
 		w.WriteHeader(http.StatusBadRequest)
 		return model.AccountRespondError{
-			UserId:  acc.AccountOrder.UserId,
-			ItemID:  acc.AccountOrder.ItemID,
-			OrderID: acc.AccountOrder.OrderID,
+			UserId:  acc.UserId,
+			ItemID:  acc.ItemID,
+			OrderID: acc.OrderID,
 			Info:    "No such user",
 		}
-	} else if acc.AccountOrder.Price > user.UserBalance {
+	} else if acc.Price > user.UserBalance {
 		w.WriteHeader(http.StatusBadRequest)
 		return model.AccountRespondError{
-			UserId:  acc.AccountOrder.UserId,
-			ItemID:  acc.AccountOrder.ItemID,
-			OrderID: acc.AccountOrder.OrderID,
+			UserId:  acc.UserId,
+			ItemID:  acc.ItemID,
+			OrderID: acc.OrderID,
 			Info:    "Not enough money to buy it",
 		}
-	} else if acc.AccountOrder.DeletedAt.Valid {
+	} else if acc.DeletedAt.Valid {
 		w.WriteHeader(http.StatusBadRequest)
 		return model.AccountRespondError{
-			UserId:  acc.AccountOrder.UserId,
-			ItemID:  acc.AccountOrder.ItemID,
-			OrderID: acc.AccountOrder.OrderID,
+			UserId:  acc.UserId,
+			ItemID:  acc.ItemID,
+			OrderID: acc.OrderID,
 			Info:    "Deleted user",
 		}
 	} else {
-		db.Model(&model.Balance{}).Where("user_id = ?", user.UserId).Update("user_balance", user.UserBalance-acc.AccountOrder.Price)
+		db.Model(&model.Balance{}).Where("user_id = ?", user.UserId).Update("user_balance", user.UserBalance-acc.Price)
 		w.WriteHeader(http.StatusOK)
 		return model.AccountRespond{
-			UserId:      acc.AccountOrder.UserId,
-			ItemID:      acc.AccountOrder.ItemID,
-			OrderID:     acc.AccountOrder.OrderID,
-			UserBalance: user.UserBalance - acc.AccountOrder.Price,
+			UserId:      acc.UserId,
+			ItemID:      acc.ItemID,
+			OrderID:     acc.OrderID,
+			UserBalance: user.UserBalance - acc.Price,
 		}
 	}
 }
